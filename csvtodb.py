@@ -23,3 +23,25 @@ class Csvtodb(object):
         df = df[1:]
         df.columns = new_header
         return df
+    
+    def emailValidation(self,df,emailcolumn):
+        df[emailcolumn] = df[emailcolumn].str.replace(" ","")
+        df[emailcolumn] = df[emailcolumn].str.replace("'","")
+        df[emailcolumn] = df[emailcolumn].str.replace('"','')
+        df[emailcolumn] = df[emailcolumn].str.replace(';','')
+        df[emailcolumn] = df[emailcolumn].str.replace(':','')
+        #mencari at atau merubah yang ada jadi at
+        df[emailcolumn] = df[emailcolumn].str.replace("!","@")
+        df[emailcolumn] = df[emailcolumn].str.replace("#","@")
+        df[emailcolumn] = df[emailcolumn].str.replace("$","@")
+        df[emailcolumn] = df[emailcolumn].str.replace("%","@")
+        df[emailcolumn] = df[emailcolumn].str.replace("^","@")
+        df[emailcolumn] = df[emailcolumn].str.replace("&","@")
+        df[emailcolumn] = df[emailcolumn].str.replace("*","@")
+        #merubah koma menjadi titik
+        df[emailcolumn] = df[emailcolumn].str.replace(",",".")
+        return df
+    
+    def joinDatetime(self,df,datecolumn,timecolumn):
+        df['expired_date'] = pandas.to_datetime(df[datecolumn].dt.strftime('%Y-%m-%d')+ ' ' +df[timecolumn])
+        return df
