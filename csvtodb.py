@@ -45,6 +45,7 @@ class Csvtodb(object):
         df[emailcolumn] = df[emailcolumn].str.replace(",",".")
         #validation
         cekimel = df[emailcolumn].apply(lambda x:validate_email(x))
+        cek = df[emailcolumn].value_counts()
         return df
     
     def joinDatetime(self,df,datecolumn,timecolumn):
