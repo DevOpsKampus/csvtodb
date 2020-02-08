@@ -17,7 +17,7 @@ df = cd.emailValidation(df,'customer_email')
 
 df = cd.joinDatetime(df,'expired_date','expired_time')
 # In[]
-df['expired_date'].dt.strftime('%Y-%m-%d')
+df.reset_index(inplace = True, drop = True)
 # In[]
 df['expired_date'] = df['expired_date'].dt.strftime('%Y-%m-%d')+ ' ' +df['expired_time']
 

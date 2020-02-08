@@ -5,6 +5,8 @@ Created on Sat Feb  8 06:36:46 2020
 @author: rolly
 """
 import pandas
+import re
+from validate_email import validate_email
 
 class Csvtodb(object):
     def openExcel(self,filename):
@@ -22,6 +24,7 @@ class Csvtodb(object):
         new_header =df.iloc[0]
         df = df[1:]
         df.columns = new_header
+        df.reset_index(inplace = True, drop = True)
         return df
     
     def emailValidation(self,df,emailcolumn):
@@ -40,6 +43,8 @@ class Csvtodb(object):
         df[emailcolumn] = df[emailcolumn].str.replace("*","@")
         #merubah koma menjadi titik
         df[emailcolumn] = df[emailcolumn].str.replace(",",".")
+        #validation
+        cekimel = df[emailcolumn].apply(lambda x:validate_email(x))
         return df
     
     def joinDatetime(self,df,datecolumn,timecolumn):
