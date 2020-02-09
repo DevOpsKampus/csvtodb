@@ -10,6 +10,7 @@ from validate_email import validate_email
 class Filetodb(object):
     def __init__(self):
         self.unregemail=[]
+        self.unregphone=[]
         
     def getCSVSeparator(self,filename):
         with open(filename) as f:
@@ -49,37 +50,63 @@ class Filetodb(object):
         df.reset_index(inplace = True, drop = True)
         return df
     
-    def fixEmail(self,df,emailcolumn):
+    def dropSpCharIn(self,df,columnname):
         #hapus tanda kutip spasi dan titik dua
-        df[emailcolumn] = df[emailcolumn].str.replace(" ","")
-        df[emailcolumn] = df[emailcolumn].str.replace("'","")
-        df[emailcolumn] = df[emailcolumn].str.replace('"','')
-        df[emailcolumn] = df[emailcolumn].str.replace(';','')
-        df[emailcolumn] = df[emailcolumn].str.replace(':','')
+        df[columnname] = df[columnname].str.replace(" ","")
+        df[columnname] = df[columnname].str.replace("'","")
+        df[columnname] = df[columnname].str.replace('"','')
+        df[columnname] = df[columnname].str.replace(';','')
+        df[columnname] = df[columnname].str.replace(':','')
         #hapus karakter khusus yang tidak lazim di alamat email
-        df[emailcolumn] = df[emailcolumn].str.replace("!","")
-        df[emailcolumn] = df[emailcolumn].str.replace("#","")
-        df[emailcolumn] = df[emailcolumn].str.replace("$","")
-        df[emailcolumn] = df[emailcolumn].str.replace("%","")
-        df[emailcolumn] = df[emailcolumn].str.replace("^","")
-        df[emailcolumn] = df[emailcolumn].str.replace("&","")
-        df[emailcolumn] = df[emailcolumn].str.replace("*","")
-        df[emailcolumn] = df[emailcolumn].str.replace("[","")
-        df[emailcolumn] = df[emailcolumn].str.replace("]","")
-        df[emailcolumn] = df[emailcolumn].str.replace("{","")
-        df[emailcolumn] = df[emailcolumn].str.replace("}","")
-        df[emailcolumn] = df[emailcolumn].str.replace("+","")
-        df[emailcolumn] = df[emailcolumn].str.replace("=","")
-        df[emailcolumn] = df[emailcolumn].str.replace("|","")
-        df[emailcolumn] = df[emailcolumn].str.replace("\\","")
-        df[emailcolumn] = df[emailcolumn].str.replace("(","")
-        df[emailcolumn] = df[emailcolumn].str.replace(")","")
-        df[emailcolumn] = df[emailcolumn].str.replace("`","")
-        df[emailcolumn] = df[emailcolumn].str.replace("~","")
-        df[emailcolumn] = df[emailcolumn].str.replace("<","")
-        df[emailcolumn] = df[emailcolumn].str.replace(">","")
-        df[emailcolumn] = df[emailcolumn].str.replace("?","")
-        df[emailcolumn] = df[emailcolumn].str.replace("/","")
+        df[columnname] = df[columnname].str.replace("!","")
+        df[columnname] = df[columnname].str.replace("#","")
+        df[columnname] = df[columnname].str.replace("$","")
+        df[columnname] = df[columnname].str.replace("%","")
+        df[columnname] = df[columnname].str.replace("^","")
+        df[columnname] = df[columnname].str.replace("&","")
+        df[columnname] = df[columnname].str.replace("*","")
+        df[columnname] = df[columnname].str.replace("[","")
+        df[columnname] = df[columnname].str.replace("]","")
+        df[columnname] = df[columnname].str.replace("{","")
+        df[columnname] = df[columnname].str.replace("}","")
+        df[columnname] = df[columnname].str.replace("+","")
+        df[columnname] = df[columnname].str.replace("=","")
+        df[columnname] = df[columnname].str.replace("|","")
+        df[columnname] = df[columnname].str.replace("\\","")
+        df[columnname] = df[columnname].str.replace("(","")
+        df[columnname] = df[columnname].str.replace(")","")
+        df[columnname] = df[columnname].str.replace("`","")
+        df[columnname] = df[columnname].str.replace("~","")
+        df[columnname] = df[columnname].str.replace("<","")
+        df[columnname] = df[columnname].str.replace(">","")
+        df[columnname] = df[columnname].str.replace("?","")
+        df[columnname] = df[columnname].str.replace("/","")
+        #utf-8 char
+        df[columnname] = df[columnname].str.replace("\u202d","")
+        return df
+        
+    def fixPhoneNumber(self,df,phonecolumn):
+        df=self.dropSpCharIn(df,phonecolumn)
+        df[phonecolumn] = df[phonecolumn].apply(lambda x:self.fixPhoneProvider(x))
+        return df
+    
+    def fixPhoneProvider(self,phonedata):
+        if phonedata[:2] == '08':
+            phone='62'+phonedata[1:]
+        elif phonedata[:1] == '8':
+            phone='62'+phonedata
+        elif phonedata[:4] == '0966':
+            phone=phonedata[1:]
+        else:
+            phone=phonedata
+            self.unregphone.append(phonedata)
+        return phone
+    
+    def getUnregPhones(self):
+        return self.unregphone
+        
+    def fixEmail(self,df,emailcolumn):
+        df=self.dropSpCharIn(df,emailcolumn)
         #merubah koma menjadi titik
         df[emailcolumn] = df[emailcolumn].str.replace(",",".")
         #pengecekan satu persatu
