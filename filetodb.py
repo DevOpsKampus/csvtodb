@@ -120,6 +120,9 @@ class Filetodb(object):
                 else:
                     useremail=email
                     self.unregemail.append(email)
+            else:
+                useremail=email
+                self.unregemail.append(email)
         return useremail
         
     def getUnregEmails(self):
