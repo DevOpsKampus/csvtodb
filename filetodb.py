@@ -11,12 +11,22 @@ class Filetodb(object):
     def __init__(self):
         self.unregemail=[]
         
+    def getCSVSeparator(self,filename):
+        with open(filename) as f:
+        	line = f.readline()
+        separators=[',',';','|']
+        for sep in separators:
+            if line.find(sep) > 1:
+                separator = sep
+                break
+        return separator
+
     def openFile(self,filename):
         try:
             df = pandas.read_excel(filename, sheet_name=0)
         except:
             #separator detection
-            sep=';'
+            sep=self.getCSVSeparator(filename)
             df = pandas.read_csv(filename,sep=sep)
         return df
         

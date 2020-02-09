@@ -8,7 +8,7 @@ import filetodb
 
 fd = filetodb.Filetodb()
 
-df = fd.openFile('VA SPP Genap 2019-2020.xlsx')
+df = fd.openFile('VA SPP Genap 2019-2020.csv')
 df = fd.cleanEmptyCell(df)
 df = fd.checkSetHeader(df,'upload_id')
 df = fd.joinDatetime(df,'expired_date','expired_time')
@@ -23,9 +23,3 @@ if len(invalidemails) == 0 and len(unregisteredemail) == 0:
 
 # In[]
 
-import filetodb
-
-fd = filetodb.Filetodb()
-
-df = fd.openFile('VA SPP Genap 2019-2020.csv')
-df = fd.cleanEmptyCell(df)
