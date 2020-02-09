@@ -8,8 +8,16 @@ import pandas
 from validate_email import validate_email
 
 class Filetodb(object):
-    def openExcel(self,filename):
-        df = pandas.read_excel(filename, sheet_name=0)
+    def __init__(self):
+        self.unregemail=[]
+        
+    def openFile(self,filename):
+        try:
+            df = pandas.read_excel(filename, sheet_name=0)
+        except:
+            #separator detection
+            sep=';'
+            df = pandas.read_csv(filename,sep=sep)
         return df
         
     def cleanEmptyCell(self,df):
@@ -19,7 +27,12 @@ class Filetodb(object):
         df = df.dropna(thresh=thr, axis=1)
         return df
         
-    def setHeaderfromRow(self,df):
+    def checkSetHeader(self,df,firstcolumnname):
+        if df.columns[0] != firstcolumnname:
+            df = self.setHeaderfromFirstRow(df)
+        return df
+    
+    def setHeaderfromFirstRow(self,df):
         new_header =df.iloc[0]
         df = df[1:]
         df.columns = new_header
@@ -67,7 +80,7 @@ class Filetodb(object):
         for emailprovider in emailproviders:
             usern=email.split(emailprovider)
             if len(usern)>1:#if found the provider
-                if len(usern[0].split('@')) > 1 :#check if double at email
+                if len(usern[0].split('@')) > 1 :#check if double at symbol in string
                     useremail=usern[0].replace('@','')+'@'+emailprovider
                 else :
                     useremail=usern[0][:-1]+'@'+emailprovider
@@ -83,19 +96,23 @@ class Filetodb(object):
                     useremail=typo_email[0]+'@'+typo_email[1]
         if 'useremail' not in locals():
             useremail=email
-            f=open("emailnotlisted.txt", "a")
-            f.write(email+'\n')
-            f.close()
+            self.unregemail.append(email)
         return useremail
         
+    def getUnregEmails(self):
+        return self.unregemail
+    
     def cekEmailValid(self,df,emailcolumn):
         df['is_valid_email'] = df[emailcolumn].apply(lambda x:validate_email(x))
         return df
         
-    def getInvalidEmail(self,df,emailcolumn):
+    def getInvalidEmails(self,df,emailcolumn):
         crot=df[df['is_valid_email'].eq(False)]
         return crot
     
     def joinDatetime(self,df,datecolumn,timecolumn):
-        df['expired_date'] = pandas.to_datetime(df[datecolumn].dt.strftime('%Y-%m-%d')+ ' ' +df[timecolumn])
+        try:
+            df[datecolumn] = pandas.to_datetime(df[datecolumn].dt.strftime('%Y-%m-%d')+ ' ' +df[timecolumn])
+        except:
+            df[datecolumn] = pandas.to_datetime(df[datecolumn]+ ' ' +df[timecolumn])
         return df

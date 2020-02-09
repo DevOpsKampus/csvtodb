@@ -8,25 +8,23 @@ import filetodb
 
 fd = filetodb.Filetodb()
 
-df = fd.openExcel('VA SPP Genap 2019-2020.xlsx')
+df = fd.openFile('VA SPP Genap 2019-2020.xlsx')
 df = fd.cleanEmptyCell(df)
-df = fd.setHeaderfromRow(df)
+df = fd.checkSetHeader(df,'upload_id')
 df = fd.joinDatetime(df,'expired_date','expired_time')
 
 df = fd.fixEmail(df,'customer_email')
 df = fd.cekEmailValid(df, 'customer_email')
-invalidemails = fd.getInvalidEmail(df,'customer_email')
+invalidemails = fd.getInvalidEmails(df,'customer_email')
 
 if len(invalidemails) == 0:
     print('email valid semua')
 
 # In[]
 
-crot=df[df['is_valid_email'].eq(False)]
+import filetodb
 
-df.loc[df['is_valid_email'] == False, 'customer_email'] = 10
-#pake index
-df.at[0,'customer_email']= 20
-#
-# In[]
-emailnovalid = fd.fixEmailnoAt(emailnovalid,'customer_email')
+fd = filetodb.Filetodb()
+
+df = fd.openFile('VA SPP Genap 2019-2020.csv')
+df = fd.cleanEmptyCell(df)
