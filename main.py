@@ -16,8 +16,9 @@ df = fd.joinDatetime(df,'expired_date','expired_time')
 df = fd.fixEmail(df,'customer_email')
 df = fd.cekEmailValid(df, 'customer_email')
 invalidemails = fd.getInvalidEmails(df,'customer_email')
+unregisteredemail = fd.getUnregEmails()
 
-if len(invalidemails) == 0:
+if len(invalidemails) == 0 and len(unregisteredemail) == 0:
     print('email valid semua')
 
 # In[]
