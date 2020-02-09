@@ -27,4 +27,4 @@ df.loc[df['is_valid_email'] == False, 'customer_email'] = 10
 df.at[0,'customer_email']= 20
 #
 # In[]
-email = fd.fixEmailnoAt(emailnovalid,'customer_email')
+emailnovalid = fd.fixEmailnoAt(emailnovalid,'customer_email')
