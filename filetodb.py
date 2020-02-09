@@ -87,7 +87,7 @@ class Filetodb(object):
                         'bapeten.go.id','airasia.com','moriroku.co.id','cgglobal.com',
                         'jssbdo.com','telpp.com','engineer.com'
                         ]
-        for emailprovider in emailproviders:
+        for emailprovider in emailproviders:#identify provider with no at or wrong at position
             usern=email.split(emailprovider)
             if len(usern) == 2:#if found the provider
                 if len(usern[0].split('@')) > 1 :#check if double at symbol in string
@@ -95,9 +95,9 @@ class Filetodb(object):
                 else :
                     useremail=usern[0][:-1]+'@'+emailprovider
                 break
-        if 'useremail' not in locals():#unregistered provider
+        if 'useremail' not in locals():#unregistered provider or typo provider
             typo_email=email.split('@')
-            if len(typo_email) == 2: #if found typo provider after at
+            if len(typo_email) == 2: #normal at only one
                 if len(typo_email[1]) == 9:
                     typo_email[1]=typo_email[1].replace('gamil.com','gmail.com')
                     typo_email[1]=typo_email[1].replace('gmali.com','gmail.com')
@@ -120,7 +120,7 @@ class Filetodb(object):
                 else:
                     useremail=email
                     self.unregemail.append(email)
-            else:
+            else:#abnormal at, no at or more than one
                 useremail=email
                 self.unregemail.append(email)
         return useremail
