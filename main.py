@@ -4,28 +4,27 @@ Created on Fri Feb  7 15:07:15 2020
 
 @author: rolly
 """
-import pandas as pd
-import csvtodb
+import filetodb
 
-cd = csvtodb.Csvtodb()
+fd = filetodb.Filetodb()
 
-df = cd.openExcel('VA SPP Genap 2019-2020.xlsx')
-df = cd.cleanEmptyCell(df)
-df = cd.setHeaderfromrow(df)
+df = fd.openExcel('VA SPP Genap 2019-2020.xlsx')
+df = fd.cleanEmptyCell(df)
+df = fd.setHeaderfromRow(df)
+df = fd.joinDatetime(df,'expired_date','expired_time')
 
-df = cd.emailValidation(df,'customer_email')
-
-df = cd.joinDatetime(df,'expired_date','expired_time')
-# In[]
-df.reset_index(inplace = True, drop = True)
-# In[]
-df['expired_date'] = df['expired_date'].dt.strftime('%Y-%m-%d')+ ' ' +df['expired_time']
+df = fd.fixEmail(df,'customer_email')
+df = fd.cekEmailValid(df, 'customer_email')
+emailnovalid = fd.getInvalidEmail(df,'customer_email')
 
 
 # In[]
-#df['expired_date'] = df['expired_date'].str.replace("00:00:00",df['expired_time'])
-df['expired_date'] = pd.to_datetime(df['expired_date'])
-df['expired_time'] = pd.to_datetime(df['expired_time'])
+
+crot=df[df['is_valid_email'].eq(False)]
+
+df.loc[df['is_valid_email'] == False, 'customer_email'] = 10
+#pake index
+df.at[0,'customer_email']= 20
+#
 # In[]
-df['expired_time'] = pd.Timestamp.combine(df['expired_date'],df['expired_time'])
-#df['expired_date'] = df['expired_date']+df['expired_time']
+email = fd.fixEmailnoAt(emailnovalid,'customer_email')
