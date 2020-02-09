@@ -76,6 +76,10 @@ class Filetodb(object):
                 typo_email=email.split('@')
                 if len(typo_email)>1: #if found typo provider after at
                     typo_email[1]=typo_email[1].replace('gmail','gmail.com')
+                    typo_email[1]=typo_email[1].replace('gamil','gmail.com')
+                    typo_email[1]=typo_email[1].replace('gmali','gmail.com')
+                    typo_email[1]=typo_email[1].replace('gmai','gmail.com')
+                    typo_email[1]=typo_email[1].replace('gmil','gmail.com')
                     useremail=typo_email[0]+'@'+typo_email[1]
         if 'useremail' not in locals():
             useremail=email
