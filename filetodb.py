@@ -100,7 +100,8 @@ class Filetodb(object):
             phone=phonedata[1:]
         else:
             phone=phonedata
-            self.unregphone.append(phonedata)
+            if phonedata != 'nan':
+                self.unregphone.append(phonedata)
         return phone
     
     def getUnregPhones(self):
