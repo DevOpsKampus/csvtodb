@@ -24,7 +24,8 @@ class Filetodb(object):
 
     def openFile(self,filename):
         try:
-            df = pandas.read_excel(filename, sheet_name=0)
+            converters = {col: str for col in (6, 7)}
+            df = pandas.read_excel(filename, sheet_name=0, converters=converters)
         except:
             #separator detection
             sep=self.getCSVSeparator(filename)
@@ -91,7 +92,6 @@ class Filetodb(object):
         return df
     
     def fixPhoneProvider(self,phonedata):
-        phonedata=str(phonedata)
         if phonedata[:2] == '08':
             phone='62'+phonedata[1:]
         elif phonedata[:1] == '8':
@@ -100,8 +100,7 @@ class Filetodb(object):
             phone=phonedata[1:]
         else:
             phone=phonedata
-            if phonedata != 'nan':
-                self.unregphone.append(phonedata)
+            self.unregphone.append(phonedata)
         return phone
     
     def getUnregPhones(self):
