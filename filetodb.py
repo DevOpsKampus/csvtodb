@@ -91,6 +91,7 @@ class Filetodb(object):
         return df
     
     def fixPhoneProvider(self,phonedata):
+        phonedata=str(phonedata)
         if phonedata[:2] == '08':
             phone='62'+phonedata[1:]
         elif phonedata[:1] == '8':
