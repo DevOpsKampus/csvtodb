@@ -1,0 +1,5 @@
+Flask
+gunicorn
+pandas
+validate_email
+sqlalchemy
