@@ -16,6 +16,7 @@ df = fd.joinDatetime(df,'expired_date','expired_time')
 df = fd.fixEmail(df,'customer_email')
 df = fd.cekEmailValid(df, 'customer_email')
 df = fd.fixPhoneNumber(df,'customer_phone')
+
 invalidemails = fd.getInvalidEmails(df,'customer_email')
 unregisteredemail = fd.getUnregEmails()
 unregisteredphone = fd.getUnregPhones()

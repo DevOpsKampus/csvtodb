@@ -1,0 +1,14 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Feb 12 07:17:01 2020
+
+@author: rolly
+"""
+
+db_host='127.0.0.1'
+db_username='userdb'
+db_password='crooootttt'
+db_name='namadatabase'
+db_table='namatabel'
+
+columns=['kolom1','kolom2','kolom3','kolom4','kolom5','dst']
