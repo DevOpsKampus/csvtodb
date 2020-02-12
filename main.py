@@ -24,55 +24,12 @@ if len(invalidemails) == 0 and len(unregisteredemail) == 0 and len(unregisteredp
     fd.toDB(df)
     print('ok')
 else:
+   print('{ "invalid_phones" :')
    print(unregisteredphone)
+   print(',')
+   print(' "invalid_emails" :')
    print(unregisteredemail)
+   print('}')
+   
 # In[]
-    
-from sqlalchemy import create_engine
-
-# create sqlalchemy engine
-engine = create_engine("mysql+pymysql://{user}:{pw}@{host}/{db}"
-                       .format(host='127.0.0.1',
-                               user="root",
-                               pw="rollyganteng",
-                               db="va"))
-
-# In[]
-
-df=df.rename(columns={"prodi ": "Prodi_ID", "jenjang": "Jenjang_ID"})
-
-# In[]
-df=df.drop(columns=['is_valid_email'])
-# In[]
-df.columns =['upload_id','client_id','trx_id','virtual_account','customer_name','customer_email','customer_phone','trx_amount','expired_date','expired_time','description','status','approval','Prodi_ID','Jenjang_ID']
-# In[]
-
-df.to_sql('upload', con = engine, if_exists = 'append', chunksize = 1000,index=False)
-
-
-    
-# In[]
-
-import pymysql
-
-
-# Connect to the database
-connection = pymysql.connect(host='localhost',
-                         user='root',
-                         password='rollyganteng',
-                         db='va')
-
-
-# create cursor
-cursor=connection.cursor()
-
-# creating column list for insertion
-cols = 'upload_id`,`client_id`,`trx_id`,`virtual_account`,`customer_name`,`customer_email`,`customer_phone`,`trx_amount`,`expired_date`,`expired_time`,`description`,`status`,`approval`,`prodi`,`jenjang'
-
-# Insert DataFrame recrds one by one.
-for i,row in df.iterrows():
-    sql = "INSERT INTO `book_details` (`" +cols + "`) VALUES (" + "%s,"*(len(row)-1) + "%s)"
-    cursor.execute(sql, tuple(row))
-
-    # the connection is not autocommitted by default, so we must commit to save our changes
-    connection.commit()
+ 
