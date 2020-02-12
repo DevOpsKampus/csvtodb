@@ -20,28 +20,34 @@ invalidemails = fd.getInvalidEmails(df,'customer_email')
 unregisteredemail = fd.getUnregEmails()
 unregisteredphone = fd.getUnregPhones()
 
-if len(invalidemails) == 0 and len(unregisteredemail) == 0:
-    print('email valid semua')
-
-if len(unregisteredphone) > 0:
-    print("telepon tidak valid:")
-    print(unregisteredphone)
+if len(invalidemails) == 0 and len(unregisteredemail) == 0 and len(unregisteredphone) == 0:
+    fd.toDB(df)
+    print('ok')
+else:
+   print(unregisteredphone)
+   print(unregisteredemail)
 # In[]
     
 from sqlalchemy import create_engine
 
 # create sqlalchemy engine
-engine = create_engine("mysql+pymysql://{user}:{pw}@127.0.0.1/{db}"
-                       .format(user="root",
+engine = create_engine("mysql+pymysql://{user}:{pw}@{host}/{db}"
+                       .format(host='127.0.0.1',
+                               user="root",
                                pw="rollyganteng",
                                db="va"))
 
 # In[]
 
 df=df.rename(columns={"prodi ": "Prodi_ID", "jenjang": "Jenjang_ID"})
+
+# In[]
+df=df.drop(columns=['is_valid_email'])
+# In[]
+df.columns =['upload_id','client_id','trx_id','virtual_account','customer_name','customer_email','customer_phone','trx_amount','expired_date','expired_time','description','status','approval','Prodi_ID','Jenjang_ID']
 # In[]
 
-df.to_sql('upload', con = engine, if_exists = 'append', chunksize = 1000)
+df.to_sql('upload', con = engine, if_exists = 'append', chunksize = 1000,index=False)
 
 
     

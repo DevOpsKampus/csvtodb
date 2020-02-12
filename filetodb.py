@@ -6,6 +6,8 @@ Created on Sat Feb  8 06:36:46 2020
 """
 import pandas
 from validate_email import validate_email
+from sqlalchemy import create_engine
+import config
 
 class Filetodb(object):
     def __init__(self):
@@ -180,3 +182,16 @@ class Filetodb(object):
         except:
             df[datecolumn] = pandas.to_datetime(df[datecolumn]+ ' ' +df[timecolumn])
         return df
+    
+    def toDB(self,df):
+        engine = create_engine("mysql+pymysql://{user}:{pw}@{host}/{db}"
+                       .format(host=config.db_host,
+                               user=config.db_username,
+                               pw=config.db_password,
+                               db=config.db_name))
+        df=df.drop(columns=['is_valid_email'])
+        df.columns=config.columns
+        df.to_sql(config.db_table, con = engine, if_exists = 'append', chunksize = 1000,index=False)
+        
+        
+        
