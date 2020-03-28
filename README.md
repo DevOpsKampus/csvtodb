@@ -1,2 +1,2 @@
-# csvtodb
-Read CSV and Insert To Database
+# filetodb
+Read excel or csv and Insert To Database
